@@ -1,0 +1,99 @@
+@mixin center {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+$base-color : #4a84f7;
+$light-base : #f0fcfe;
+$comp-color : #f7674a;
+
+
+html, body {
+  padding: 0;
+  margin: 0;
+}
+
+.cormorant {
+  font-family: "Cormorant", serif;
+  font-optical-sizing: auto;
+  font-weight: 300;
+  font-style: normal;
+}
+
+body {
+  width: 100vw;
+  height: 100vh;
+}
+
+.login-page{background: #4A84F7;
+  background: radial-gradient(circle, rgba(74, 132, 247, 1) 0%, rgba(240, 252, 254, 1) 100%);  height: 100%;
+  @include center;
+  background-color: $base-color;
+  padding: 0;
+  margin: 0;
+
+  .login-page-interface {
+    @include center;
+    width: 285px;
+    flex-direction: column;
+    padding: 30px;
+    border-radius: 15px;
+    border: 2px solid $light-base;
+
+    h4, h1 {
+      color: $light-base;
+      text-align: center;
+    }
+
+    .login-part {
+      a {
+        display: block;
+        width: 200px;
+        padding: 10px 15px;
+        margin: 25px;
+        text-align: center;
+        text-decoration: none;
+        color: $light-base;
+        font-size: 1.6em;
+        border-radius: 15px;
+        border: 2px solid $light-base;
+      }
+
+      a:hover {
+        background: $light-base;
+        color: $base-color;
+        transition: 0.2s;
+      }
+    }
+
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      color: $light-base;
+      text-align: center;
+    }
+
+    .back-login-button {
+      display: block;
+      margin: 10px;
+      color: $light-base;
+      text-decoration: none;
+    }
+
+    input, button {
+      color: $base-color;
+      border-radius: 5px;
+      border-color: $base-color;
+  }
+    button {
+      margin-top: 20px ;
+      background-color: $base-color;
+      color: $light-base;
+    }
+  }
+}
+
+

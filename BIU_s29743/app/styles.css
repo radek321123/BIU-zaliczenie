@@ -1,0 +1,74 @@
+html, body {
+  padding: 0;
+  margin: 0; }
+
+.cormorant {
+  font-family: "Cormorant", serif;
+  font-optical-sizing: auto;
+  font-weight: 300;
+  font-style: normal; }
+
+body {
+  width: 100vw;
+  height: 100vh; }
+
+.login-page {
+  background: #4A84F7;
+  background: radial-gradient(circle, #4a84f7 0%, #f0fcfe 100%);
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: #4a84f7;
+  padding: 0;
+  margin: 0; }
+  .login-page .login-page-interface {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 285px;
+    flex-direction: column;
+    padding: 30px;
+    border-radius: 15px;
+    border: 2px solid #f0fcfe; }
+    .login-page .login-page-interface h4, .login-page .login-page-interface h1 {
+      color: #f0fcfe;
+      text-align: center; }
+    .login-page .login-page-interface .login-part a {
+      display: block;
+      width: 200px;
+      padding: 10px 15px;
+      margin: 25px;
+      text-align: center;
+      text-decoration: none;
+      color: #f0fcfe;
+      font-size: 1.6em;
+      border-radius: 15px;
+      border: 2px solid #f0fcfe; }
+    .login-page .login-page-interface .login-part a:hover {
+      background: #f0fcfe;
+      color: #4a84f7;
+      transition: 0.2s; }
+    .login-page .login-page-interface form {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      color: #f0fcfe;
+      text-align: center; }
+    .login-page .login-page-interface .back-login-button {
+      display: block;
+      margin: 10px;
+      color: #f0fcfe;
+      text-decoration: none; }
+    .login-page .login-page-interface input, .login-page .login-page-interface button {
+      color: #4a84f7;
+      border-radius: 5px;
+      border-color: #4a84f7; }
+    .login-page .login-page-interface button {
+      margin-top: 20px;
+      background-color: #4a84f7;
+      color: #f0fcfe; }
+
+/*# sourceMappingURL=styles.css.map */
