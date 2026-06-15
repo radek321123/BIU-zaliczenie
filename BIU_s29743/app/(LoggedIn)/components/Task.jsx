@@ -1,8 +1,14 @@
-export default () => {
+"use client"
+
+export default ({task}) => {
 
     return (
-        <p>
-            title, description, priority, tags, start, end, repeat time
-        </p>
+        <div key={task.id} className="task">
+            <p className="">{task.title}</p>
+            <p className="">{task.priority}</p>
+            <p className="">{task.tags.main}</p>
+            <p className="">{task.assignee}</p>
+            <p className="">{task.status}</p>
+        </div>
         )
 }

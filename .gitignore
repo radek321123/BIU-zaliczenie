@@ -1,8 +1,15 @@
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
 # dependencies
-../node_modules
-/node_modules
+node_modules
+/BIU_s29743/node_modules
+package-lock.json
+/BIU_s29743/package-lock.json
+/BIU_s29743/.next
+/BIU_s29743/.sass-cache
+/BIU_s29743/app/.sass-cache
+.idea
+
 /.pnp
 .pnp.*
 .yarn/*
@@ -40,3 +47,4 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 BIU_s29743/next-env.d.ts
+/package-lock.json

@@ -1,6 +1,19 @@
+html {
+  height: 100vh;
+  width: 100vw;
+  box-sizing: border-box;
+  background-color: #f0fcfe;
+  display: flex;
+  align-items: center;
+  justify-content: center; }
+
+*, *:before, *:after {
+  box-sizing: inherit; }
+
 html, body {
   padding: 0;
-  margin: 0; }
+  margin: 0;
+  background-color: #4a84f7; }
 
 .cormorant {
   font-family: "Cormorant", serif;
@@ -9,8 +22,9 @@ html, body {
   font-style: normal; }
 
 body {
-  width: 100vw;
-  height: 100vh; }
+  width: 100%;
+  height: 100%;
+  max-width: 3840px; }
 
 .login-page {
   background: #4A84F7;
@@ -28,7 +42,7 @@ body {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    width: 285px;
+    width: 345px;
     flex-direction: column;
     padding: 30px;
     border-radius: 15px;
@@ -70,5 +84,79 @@ body {
       margin-top: 20px;
       background-color: #4a84f7;
       color: #f0fcfe; }
+
+.tasks-page {
+  padding: 0;
+  margin: 0;
+  height: auto;
+  width: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center; }
+  .tasks-page .tasks-filters {
+    padding: 0;
+    margin: 0;
+    display: flex;
+    width: 100%;
+    height: 60px;
+    background-color: #f0fcfe;
+    position: sticky;
+    top: 60px;
+    left: 0;
+    border-radius: 0 0 10px 10px;
+    border: 2px #4a84f7 solid; }
+  .tasks-page .tasks-container {
+    width: 100%;
+    height: 100%;
+    overflow-y: scroll;
+    display: grid;
+    grid-template-columns: repeat(8, 1fr);
+    background-color: #4a84f7; }
+    @media only screen and (max-width: 2560px) {
+      .tasks-page .tasks-container {
+        grid-template-columns: repeat(7, 1fr); } }
+    @media only screen and (max-width: 1920px) {
+      .tasks-page .tasks-container {
+        grid-template-columns: repeat(6, 1fr); } }
+    @media only screen and (max-width: 1600px) {
+      .tasks-page .tasks-container {
+        grid-template-columns: repeat(5, 1fr); } }
+    @media only screen and (max-width: 1300px) {
+      .tasks-page .tasks-container {
+        grid-template-columns: repeat(4, 1fr); } }
+    @media only screen and (max-width: 1000px) {
+      .tasks-page .tasks-container {
+        grid-template-columns: repeat(3, 1fr); } }
+    .tasks-page .tasks-container .task {
+      background-color: #dfdfdf;
+      margin: 10px;
+      border-radius: 10px;
+      border: 3px solid #f0fcfe; }
+
+nav {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  background-color: #4a84f7;
+  position: sticky;
+  top: 0;
+  left: 0; }
+  nav a {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    display: flex;
+    width: 120px;
+    border: 1px solid #f0fcfe;
+    height: 50px;
+    color: #f0fcfe;
+    text-decoration: none;
+    text-align: center;
+    align-items: center;
+    margin: 5px;
+    border-radius: 10px; }
+  nav .navbar-left, nav .navbar-right {
+    display: flex; }
 
 /*# sourceMappingURL=styles.css.map */

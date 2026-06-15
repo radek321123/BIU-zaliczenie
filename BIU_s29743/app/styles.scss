@@ -5,14 +5,28 @@
   justify-content: center;
 }
 
-$base-color : #4a84f7;
-$light-base : #f0fcfe;
-$comp-color : #f7674a;
+$base-color: #4a84f7;
+$light-base: #f0fcfe;
+$mid-color: #dfdfdf;
 
+html{
+  height: 100vh;
+  width: 100vw;
+  box-sizing: border-box;
+  background-color: $light-base;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+*, *:before, *:after {
+  box-sizing: inherit;
+}
 
 html, body {
   padding: 0;
   margin: 0;
+  background-color: $base-color;
 }
 
 .cormorant {
@@ -23,12 +37,15 @@ html, body {
 }
 
 body {
-  width: 100vw;
-  height: 100vh;
+  width: 100%;
+  height: 100%;
+  max-width: 3840px;
 }
 
-.login-page{background: #4A84F7;
-  background: radial-gradient(circle, rgba(74, 132, 247, 1) 0%, rgba(240, 252, 254, 1) 100%);  height: 100%;
+.login-page {
+  background: #4A84F7;
+  background: radial-gradient(circle, rgba(74, 132, 247, 1) 0%, rgba(240, 252, 254, 1) 100%);
+  height: 100%;
   @include center;
   background-color: $base-color;
   padding: 0;
@@ -36,7 +53,7 @@ body {
 
   .login-page-interface {
     @include center;
-    width: 285px;
+    width: 345px;
     flex-direction: column;
     padding: 30px;
     border-radius: 15px;
@@ -87,13 +104,106 @@ body {
       color: $base-color;
       border-radius: 5px;
       border-color: $base-color;
-  }
+    }
+
     button {
-      margin-top: 20px ;
+      margin-top: 20px;
       background-color: $base-color;
       color: $light-base;
     }
   }
 }
 
+.tasks-page {
+  padding: 0;
+  margin: 0;
+  height: auto;
+  width: auto;
+  display: flex;
 
+  flex-direction: column;
+  align-items: center;
+
+
+  .tasks-filters {
+    padding: 0;
+    margin: 0;
+    display: flex;
+    width: 100%;
+    height: 60px;
+    background-color: $light-base;
+    position: sticky;
+    top: 60px;
+    left: 0;
+    border-radius: 0 0 10px 10px ;
+    border: 2px $base-color solid;
+  }
+
+  .tasks-container {
+    width: 100%;
+    height: 100%;
+    overflow-y: scroll;
+    display: grid;
+    grid-template-columns: repeat(8, 1fr);
+    background-color: $base-color;
+
+    @media only screen and (max-width: 2560px) {
+      grid-template-columns: repeat(7, 1fr);
+    }
+
+    @media only screen and (max-width: 1920px) {
+      grid-template-columns: repeat(6, 1fr);
+    }
+
+    @media only screen and (max-width: 1600px) {
+      grid-template-columns: repeat(5, 1fr);
+    }
+
+    @media only screen and (max-width: 1300px) {
+      grid-template-columns: repeat(4, 1fr);
+    }
+
+    @media only screen and (max-width: 1000px) {
+      grid-template-columns: repeat(3, 1fr);
+    }
+
+    .task {
+      background-color: $mid-color;
+      margin: 10px;
+      border-radius: 10px;
+      border: 3px solid $light-base;
+    }
+
+
+  }
+}
+
+
+nav {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  background-color: $base-color;
+  position: sticky;
+  top: 0;
+  left: 0;
+
+  a {
+    @include center;
+    display: flex;
+    width: 120px;
+    border: 1px solid $light-base;
+    height: 50px;
+    color: $light-base;
+    text-decoration: none;
+    text-align: center;
+    align-items: center;
+    margin: 5px;
+    border-radius: 10px;
+  }
+
+
+  .navbar-left , .navbar-right {
+    display: flex;
+  }
+}
