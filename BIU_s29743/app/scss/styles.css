@@ -1,48 +1,46 @@
-html {
-  height: 100vh;
-  width: 100vw;
-  box-sizing: border-box;
-  background-color: #f0fcfe;
+nav {
   display: flex;
-  align-items: center;
-  justify-content: center; }
-
-*, *:before, *:after {
-  box-sizing: inherit; }
-
-html, body {
-  padding: 0;
-  margin: 0;
-  background-color: #4a84f7; }
-
-.cormorant {
-  font-family: "Cormorant", serif;
-  font-optical-sizing: auto;
-  font-weight: 300;
-  font-style: normal; }
-
-body {
+  flex-direction: row;
+  justify-content: space-between;
+  background-color: #4a84f7;
+  position: sticky;
   width: 100%;
-  height: 100%;
+  top: 0;
+  left: 0;
   max-width: 3840px; }
+  nav a {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    display: flex;
+    width: 120px;
+    border: 1px solid #f0fcfe;
+    height: 50px;
+    color: #f0fcfe;
+    text-decoration: none;
+    text-align: center;
+    align-items: center;
+    margin: 5px;
+    border-radius: 10px; }
+  nav .navbar-left, nav .navbar-right {
+    display: flex; }
 
 .login-page {
-  background: #4A84F7;
-  background: radial-gradient(circle, #4a84f7 0%, #f0fcfe 100%);
   height: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  background-color: #4a84f7;
   padding: 0;
-  margin: 0; }
+  margin: 0px; }
   .login-page .login-page-interface {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     width: 345px;
+    height: 416px;
     flex-direction: column;
     padding: 30px;
     border-radius: 15px;
@@ -53,8 +51,8 @@ body {
     .login-page .login-page-interface .login-part a {
       display: block;
       width: 200px;
-      padding: 10px 15px;
-      margin: 25px;
+      padding: 5px;
+      margin: 10px;
       text-align: center;
       text-decoration: none;
       color: #f0fcfe;
@@ -75,7 +73,7 @@ body {
       display: block;
       margin: 10px;
       color: #f0fcfe;
-      text-decoration: none; }
+      text-decoration: underline; }
     .login-page .login-page-interface input, .login-page .login-page-interface button {
       color: #4a84f7;
       border-radius: 5px;
@@ -99,7 +97,7 @@ body {
     display: flex;
     width: 100%;
     height: 60px;
-    background-color: #f0fcfe;
+    background-color: #dfdfdf;
     position: sticky;
     top: 60px;
     left: 0;
@@ -110,8 +108,7 @@ body {
     height: 100%;
     overflow-y: scroll;
     display: grid;
-    grid-template-columns: repeat(8, 1fr);
-    background-color: #4a84f7; }
+    grid-template-columns: repeat(8, 1fr); }
     @media only screen and (max-width: 2560px) {
       .tasks-page .tasks-container {
         grid-template-columns: repeat(7, 1fr); } }
@@ -128,35 +125,60 @@ body {
       .tasks-page .tasks-container {
         grid-template-columns: repeat(3, 1fr); } }
     .tasks-page .tasks-container .task {
-      background-color: #dfdfdf;
       margin: 10px;
       border-radius: 10px;
-      border: 3px solid #f0fcfe; }
+      border: 3px solid #4a84f7;
+      background-color: #f0fcfe;
+      padding: 10px; }
+      .tasks-page .tasks-container .task p, .tasks-page .tasks-container .task a {
+        margin: 4px;
+        color: #4a84f7; }
+      .tasks-page .tasks-container .task a {
+        font-weight: bold; }
+      .tasks-page .tasks-container .task .priority1 {
+        color: red; }
+      .tasks-page .tasks-container .task .priority2 {
+        color: darkorange; }
+      .tasks-page .tasks-container .task .priority3 {
+        color: green; }
+      .tasks-page .tasks-container .task .priority4 {
+        color: #4a84f7; }
 
-nav {
+html {
+  height: 100vh;
+  width: 100vw;
+  box-sizing: border-box;
   display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  background-color: #4a84f7;
-  position: sticky;
-  top: 0;
-  left: 0; }
-  nav a {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    display: flex;
-    width: 120px;
-    border: 1px solid #f0fcfe;
-    height: 50px;
-    color: #f0fcfe;
-    text-decoration: none;
-    text-align: center;
-    align-items: center;
-    margin: 5px;
-    border-radius: 10px; }
-  nav .navbar-left, nav .navbar-right {
-    display: flex; }
+  align-items: center;
+  justify-content: center; }
+
+*, *:before, *:after {
+  box-sizing: inherit; }
+
+html, body {
+  padding: 0;
+  margin: 0;
+  background: #4a84f7;
+  background: radial-gradient(circle, #4a84f7 0%, #f0fcfe 100%); }
+
+.cormorant {
+  font-family: "Cormorant", serif;
+  font-optical-sizing: auto;
+  font-weight: 300;
+  font-style: normal; }
+
+body {
+  width: 100%;
+  height: 100%;
+  max-width: 3840px; }
+
+.app {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  max-width: 3840px; }
 
 /*# sourceMappingURL=styles.css.map */

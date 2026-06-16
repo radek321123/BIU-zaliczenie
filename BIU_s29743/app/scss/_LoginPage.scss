@@ -1,0 +1,70 @@
+.login-page {
+
+  height: 100%;
+  @include center;
+  padding: 0;
+  margin: 0px;
+
+  .login-page-interface {
+    @include center;
+    width: 345px;
+    height: 416px;
+    flex-direction: column;
+    padding: 30px;
+    border-radius: 15px;
+    border: 2px solid $light-base;
+
+    h4, h1 {
+      color: $light-base;
+      text-align: center;
+    }
+
+    .login-part {
+      a {
+        display: block;
+        width: 200px;
+        padding: 5px;
+        margin: 10px;
+        text-align: center;
+        text-decoration: none;
+        color: $light-base;
+        font-size: 1.6em;
+        border-radius: 15px;
+        border: 2px solid $light-base;
+      }
+
+      a:hover {
+        background: $light-base;
+        color: $base-color;
+        transition: 0.2s;
+      }
+    }
+
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      color: $light-base;
+      text-align: center;
+    }
+
+    .back-login-button {
+      display: block;
+      margin: 10px;
+      color: $light-base;
+      text-decoration: underline;
+    }
+
+    input, button {
+      color: $base-color;
+      border-radius: 5px;
+      border-color: $base-color;
+    }
+
+    button {
+      margin-top: 20px;
+      background-color: $base-color;
+      color: $light-base;
+    }
+  }
+}

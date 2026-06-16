@@ -5,15 +5,17 @@ import {useEffect} from "react";
 
 export default function () {
 
-
-    const allTasks = useTasks();
+    const {tasks, dispatch} = useTasks();
 
     useEffect(() => {
-        if (allTasks.tasks===null) {
-            allTasks.fetchData()
+        if (tasks.tasks.size === 0) {
+            tasks.fetchData()
         }
     }, []);
 
+    if (tasks.tasks.size === 0) {
+        return <div>Loading...</div>;
+    }
 
     return (
 
@@ -24,7 +26,7 @@ export default function () {
                 filter
             </div>
             <div className="tasks-container">
-                {allTasks.tasks?.map((task, index) => (
+                {tasks.tasks.map((task, index) => (
                     <Task key={task.id} task={task} />
                 ))}
             </div>

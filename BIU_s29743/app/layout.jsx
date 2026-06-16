@@ -1,4 +1,4 @@
-import './styles.css'
+import './scss/styles.css'
 
 export const metadata = {
     title: "BIU",

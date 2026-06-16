@@ -1,0 +1,29 @@
+nav {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  background-color: $base-color;
+  position: sticky;
+  width: 100%;
+  top: 0;
+  left: 0;
+  max-width: 3840px;
+  a {
+    @include center;
+    display: flex;
+    width: 120px;
+    border: 1px solid $light-base;
+    height: 50px;
+    color: $light-base;
+    text-decoration: none;
+    text-align: center;
+    align-items: center;
+    margin: 5px;
+    border-radius: 10px;
+  }
+
+
+  .navbar-left , .navbar-right {
+    display: flex;
+  }
+}

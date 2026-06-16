@@ -1,10 +1,11 @@
-export const initialTaskState = {
-    tasks: [],
+export const initialUsersState = {
+    users: [],
+    loggedIn: null,
     loading: false,
     error: null,
 };
 
-export const taskReducer = (state, action) => {
+export const userReducer = (state, action) => {
     switch (action.type) {
         case 'FETCH_START':
             return {
@@ -32,6 +33,12 @@ export const taskReducer = (state, action) => {
                 ...state,
                 tasks: [...state.tasks, action.payload],
             };
+
+        case 'LOGIN_USER':
+            return {
+                ...state,
+                loggedIn: action.payload,
+            }
 
 
         default:

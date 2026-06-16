@@ -4,6 +4,48 @@ export async function GET() {
     return NextResponse.json(usersDB);
 }
 
+
+export async function POST(request) {
+    let body;
+    try {
+        body = await request.json();
+    } catch {
+        return NextResponse.json(
+            { error: "Invalid JSON body" },
+            { status: 400 }
+        );
+    }
+
+    const { username, password } = body;
+
+    if (!username || !password) {
+        return NextResponse.json(
+            { error: "Username and password are required" },
+            { status: 400 }
+        );
+    }
+
+    // Match username against the email field
+    const user = users.find((u) => u.email === username);
+
+    if (!user || user.password !== password) {
+        // Same message for both cases so you don't leak which one was wrong
+        return NextResponse.json(
+            { error: "Invalid credentials" },
+            { status: 401 }
+        );
+    }
+
+    // Don't send the password back to the client
+    const { password: _pw, ...safeUser } = user;
+
+    return NextResponse.json(
+        { message: "Login successful", user: safeUser },
+        { status: 200 }
+    );
+}
+
+
 let usersDB = [
     {
         id: 1,

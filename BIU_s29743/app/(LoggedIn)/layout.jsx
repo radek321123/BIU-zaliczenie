@@ -3,19 +3,19 @@
 import Navbar from "./components/Navbar";
 import "../contexts/TasksContext";
 import {TasksProvider} from "../contexts/TasksContext";
-import {UserProvider} from "../contexts/UsersContext";
+import {UsersProvider} from "../contexts/UsersContext";
 
 
 export default ({children}) => {
 
     return (
-        <>
-            <UserProvider>
+        <div className="App">
+            <UsersProvider>
                 <TasksProvider>
                     <Navbar/>
                     {children}
                 </TasksProvider>
-            </UserProvider>
-        </>
+            </UsersProvider>
+        </div>
     )
 }
