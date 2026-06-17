@@ -1,6 +1,6 @@
 "use client";
 
-import {createContext, useContext, useEffect, useReducer, useState} from "react";
+import {createContext, useContext, useEffect, useReducer} from "react";
 import {taskReducer, initialTaskState} from "../reducers/TaskReducer";
 
 const TaskContext = createContext(null);
@@ -8,25 +8,23 @@ const TaskContext = createContext(null);
 export function TasksProvider({ children }) {
     const [tasks, dispatch] = useReducer(taskReducer, initialTaskState);
 
-    useEffect(() => {
-        fetchData();
-    }, [dispatch]);
-
     async function fetchData() {
+        dispatch({ type: 'FETCH_START' });
         try {
-            const res = await fetch("http://localhost:3000/api/tasks");
+            const res = await fetch("/api/tasks");
             const json = await res.json();
-            for (const task of json) {
-                dispatch({
-                    type: 'ADD_TASK',
-                    payload: task,
-                });
-            }
-
+            dispatch({ type: 'FETCH_SUCCESS', payload: json });
         } catch (err) {
             console.error("Tasks API error:", err);
+            dispatch({ type: 'FETCH_ERROR', payload: err.message });
         }
     }
+
+    useEffect(() => {
+        if (tasks.tasks.length === 0) {
+            fetchData();
+        }
+    }, []);
 
     return (
         <TaskContext.Provider

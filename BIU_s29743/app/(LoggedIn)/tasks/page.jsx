@@ -1,20 +1,21 @@
 "use client"
 import {useTasks} from "../../contexts/TasksContext";
 import Task from "../components/Task";
-import {useEffect} from "react";
 
-export default function () {
+export default function TasksPage() {
 
-    const {tasks, dispatch} = useTasks();
+    const {tasks} = useTasks();
 
-    useEffect(() => {
-        if (tasks.tasks.size === 0) {
-            tasks.fetchData()
-        }
-    }, []);
+    if (tasks.error) {
+        return <div>Failed to load tasks: {tasks.error}</div>;
+    }
 
-    if (tasks.tasks.size === 0) {
+    if (tasks.loading) {
         return <div>Loading...</div>;
+    }
+
+    if (tasks.tasks.length === 0) {
+        return <div className="tasks-empty">No tasks yet</div>;
     }
 
     return (
@@ -26,7 +27,7 @@ export default function () {
                 filter
             </div>
             <div className="tasks-container">
-                {tasks.tasks.map((task, index) => (
+                {tasks.tasks.map((task) => (
                     <Task key={task.id} task={task} />
                 ))}
             </div>

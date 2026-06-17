@@ -1,4 +1,5 @@
 import './scss/styles.css'
+import {UsersProvider} from "./contexts/UsersContext";
 
 export const metadata = {
     title: "BIU",
@@ -11,8 +12,10 @@ export default function RootLayout({children}) {
             lang="en"
         >
         <body>
-        {children}
+            <UsersProvider>
+                {children}
+            </UsersProvider>
         </body>
         </html>
-    );
+);
 }

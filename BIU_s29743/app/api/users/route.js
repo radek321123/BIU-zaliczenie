@@ -1,7 +1,8 @@
 import { NextResponse } from "next/server";
 
 export async function GET() {
-    return NextResponse.json(usersDB);
+    const safeUsers = usersDB.map(({ password, ...safeUser }) => safeUser);
+    return NextResponse.json(safeUsers);
 }
 
 
@@ -16,57 +17,97 @@ export async function POST(request) {
         );
     }
 
-    const { username, password } = body;
+    const { email, password, action } = body;
 
-    if (!username || !password) {
-        return NextResponse.json(
-            { error: "Username and password are required" },
-            { status: 400 }
-        );
+    switch (action) {
+        case "register": {
+            if (!email || !password) {
+                return NextResponse.json(
+                    { error: "Username and password are required" },
+                    { status: 400 }
+                );
+            }
+
+            if (usersDB.some((u) => u.email === email)) {
+                return NextResponse.json(
+                    { error: "An account with this email already exists" },
+                    { status: 409 }
+                );
+            }
+
+            const user = {
+                id: usersDB.length + 1,
+                firstName: "",
+                lastName: "",
+                email: email,
+                password: password,
+                groups: []
+            };
+
+            usersDB.push(user);
+
+            const { password: _password, ...safeUser } = user;
+            return NextResponse.json(
+                { message: "Register successful", user: safeUser },
+                { status: 200 }
+            );
+        }
+
+        case "login": {
+            if (!email || !password) {
+                return NextResponse.json(
+                    { error: "Username and password are required" },
+                    { status: 400 }
+                );
+            }
+
+            const matchedUser = usersDB.find((u) => u.email === email && u.password === password);
+
+            if (!matchedUser) {
+                return NextResponse.json(
+                    { error: "Invalid email or password" },
+                    { status: 401 }
+                );
+            }
+
+            const { password: _password, ...safeUser } = matchedUser;
+            return NextResponse.json(
+                { message: "Login successful", user: safeUser },
+                { status: 200 }
+            );
+        }
     }
 
-    // Match username against the email field
-    const user = users.find((u) => u.email === username);
-
-    if (!user || user.password !== password) {
-        // Same message for both cases so you don't leak which one was wrong
-        return NextResponse.json(
-            { error: "Invalid credentials" },
-            { status: 401 }
-        );
-    }
-
-    // Don't send the password back to the client
-    const { password: _pw, ...safeUser } = user;
 
     return NextResponse.json(
-        { message: "Login successful", user: safeUser },
-        { status: 200 }
+        {error: "something went wrong, please try again later." },
+        { status: 400 }
     );
+
 }
 
 
 let usersDB = [
     {
         id: 1,
-        fName: "Radosław",
-        lName: "Krawiec",
+        firstName: "Radosław",
+        lastName: "Krawiec",
         email: "s29743@pjwstk.edu.pl",
         password: "admin123",
         groups: ["admin", "pjatk", "Rumia"]
     },
     {
         id: 2,
-        fName: "Jan",
-        lName: "Kowalski",
+        firstName: "Jan",
+        lastName: "Kowalski",
         email: "JK@gmail.com",
         password: "jankowalski123",
         groups: ["pjatk"]
     },
     {
         id: 3,
-        fName: "Janina",
-        lName: "Kowalska",
+        firstName: "Janina",
+        lastName: "Kowalska",
         email: "JK2@gmail.pl",
         password: "JK123",
         groups: ["Rumia"]

@@ -1,10 +1,10 @@
-export const initialTaskState = {
-    tasks: [],
+export const initialGroupsState = {
+    groups: [],
     loading: true,
     error: null,
 };
 
-export const taskReducer = (state, action) => {
+export const groupsReducer = (state, action) => {
     switch (action.type) {
         case 'FETCH_START':
             return {
@@ -16,7 +16,7 @@ export const taskReducer = (state, action) => {
         case 'FETCH_SUCCESS':
             return {
                 ...state,
-                tasks: [...action.payload],
+                groups: [...action.payload],
                 loading: false,
             };
 
@@ -27,26 +27,11 @@ export const taskReducer = (state, action) => {
                 loading: false,
             };
 
-        case 'ADD_TASK':
+        case 'ADD_GROUP':
             return {
                 ...state,
-                tasks: [...state.tasks, action.payload],
+                groups: [...state.groups, action.payload],
             };
-
-        case 'UPDATE_TASK':
-            return {
-                ...state,
-                tasks: state.tasks.map((task) =>
-                    task.id === action.payload.id ? action.payload : task
-                ),
-            };
-
-        case 'DELETE_TASK':
-            return {
-                ...state,
-                tasks: state.tasks.filter((task) => task.id !== action.payload),
-            };
-
 
         default:
             throw new Error(`Unknown action type: ${action.type}`);

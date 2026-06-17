@@ -17,7 +17,7 @@ export const userReducer = (state, action) => {
         case 'FETCH_SUCCESS':
             return {
                 ...state,
-                tasks: [...action.payload],
+                users: [...action.payload],
                 loading: false,
             };
 
@@ -28,10 +28,10 @@ export const userReducer = (state, action) => {
                 loading: false,
             };
 
-        case 'ADD_TASK':
+        case 'ADD_USER':
             return {
                 ...state,
-                tasks: [...state.tasks, action.payload],
+                users: [...state.users, action.payload],
             };
 
         case 'LOGIN_USER':

@@ -1,698 +1,79 @@
 import { NextResponse } from "next/server";
+import { tasksDB, nextTaskId, makeSchedule } from "./data";
 
 export async function GET() {
     return NextResponse.json(tasksDB);
 }
 
+export async function POST(request) {
+    let body;
+    try {
+        body = await request.json();
+    } catch {
+        return NextResponse.json(
+            { error: "Invalid JSON body" },
+            { status: 400 }
+        );
+    }
 
+    const { title, description, priority, tagMain, assignee, group, schedule } = body;
 
-let tasksDB =
-    [{
-        id: 1,
-        title: "Task1",
-        priority: 1,
+    const trimmedTitle = (title || "").trim();
+    const trimmedAssignee = (assignee || "").trim();
+    const trimmedGroup = (group || "").trim();
+
+    if (!trimmedTitle || !trimmedAssignee || !trimmedGroup) {
+        return NextResponse.json(
+            { error: "Title, assignee and group are required" },
+            { status: 400 }
+        );
+    }
+
+    const p = Number(priority);
+    const normalizedPriority = Number.isInteger(p) && p >= 1 && p <= 5 ? p : 1;
+
+    // Scheduling: "now" is stamped with the server's current time (authoritative);
+    // "scheduled" requires a client-provided start date/time.
+    const scheduleInput = schedule || {};
+    const mode = scheduleInput.mode === "scheduled" ? "scheduled" : "now";
+
+    let startDate;
+    if (mode === "now") {
+        startDate = new Date();
+    } else {
+        if (!scheduleInput.startDate) {
+            return NextResponse.json(
+                { error: "A start date is required when scheduling for later" },
+                { status: 400 }
+            );
+        }
+        startDate = scheduleInput.startDate;
+    }
+
+    const task = {
+        id: nextTaskId(),
+        title: trimmedTitle,
+        description: (description || "").trim(),
+        priority: normalizedPriority,
         tags: {
-            main: "main tag",
-            otherTags: ["other1", "other2", "other3"],
+            main: tagMain || "",
+            otherTags: [],
         },
-        assignee: "test assignee",
+        assignee: trimmedAssignee,
         status: "to do",
-        group: "group 1",
-        startDate: new Date("December 17, 1995 03:24:00"),
-        dueDate: new Date("December 17, 1995 03:24:00"),
-        repeat: {
-            time: 3600000,
-            next: new Date("December 17, 1995 03:24:00"),
-        }
-    },
-    {
-        id: 2,
-        title: "Task2",
-        priority: 2,
-        tags: {
-            main: "main tag",
-            otherTags: ["other1", "other2", "other3"],
-        },
-        assignee : "test assignee",
-        status: "in progress",
-        group: "group 2",
-        startDate: new Date("December 17, 1995 03:24:00"),
-        dueDate: new Date("December 17, 1995 03:24:00"),
-        repeat: {
-            time: 3600000,
-            next: new Date("December 17, 1995 03:24:00"),
-        }
-    },
-        {
-            id: 3,
-            title: "Task3",
-            priority: 3,
-            tags: {
-                main: "main tag",
-                otherTags: ["other1", "other2", "other3"],
-            },
-            assignee : "test assignee",
-            status: "done",
-            group: "group 1",
-            startDate: new Date("December 17, 1995 03:24:00"),
-            dueDate: new Date("December 17, 1995 03:24:00"),
-            repeat: {
-                time: 3600000,
-                next: new Date("December 17, 1995 03:24:00"),
-            }
-        },
-        {
-            id: 4,
-            title: "Task3",
-            priority: 4,
-            tags: {
-                main: "main tag",
-                otherTags: ["other1", "other2", "other3"],
-            },
-            assignee : "test assignee",
-            status: "to do",
-            group: "group 3",
-            startDate: new Date("December 17, 1995 03:24:00"),
-            dueDate: new Date("December 17, 1995 03:24:00"),
-            repeat: {
-                time: 3600000,
-                next: new Date("December 17, 1995 03:24:00"),
-            }
-        }
-    ]
+        group: trimmedGroup,
+        schedule: makeSchedule({
+            mode,
+            startDate,
+            dueDate: scheduleInput.dueDate || null,
+            repeat: scheduleInput.repeat || null,
+        }),
+    };
 
+    tasksDB.push(task);
 
-// let tasksDB = [
-//     {
-//         id: 1,
-//         title: "Task1",
-//         priority: 0,
-//         tags: {
-//             main: "main tag",
-//             otherTags: ["other1", "other2", "other3"],
-//         },
-//         assignee : "test assignee",
-//         status: "done", group: "test",
-//         startDate: new Date("December 17, 1995 03:24:00"),
-//         dueDate: new Date("December 17, 1995 03:24:00"),
-//         repeat: {
-//             time: 3600000,
-//             next: new Date("December 17, 1995 03:24:00"),
-//         }
-//     },
-//     {
-//         id: 2,
-//         title: "Task2",
-//         priority: 0,
-//         tags: {
-//             main: "main tag",
-//             otherTags: ["other1", "other2", "other3"],
-//         },
-//         assignee : "test assignee",
-//         status: "done", group: "test",
-//         startDate: new Date("December 17, 1995 03:24:00"),
-//         dueDate: new Date("December 17, 1995 03:24:00"),
-//         repeat: {
-//             time: 3600000,
-//             next: new Date("December 17, 1995 03:24:00"),
-//         }
-//     },
-//     {
-//         id: 3,
-//         title: "Task333",
-//         priority: 0,
-//         tags: {
-//             main: "main tag",
-//             otherTags: ["other1", "other2", "other3"],
-//         },
-//         assignee : "test assignee",
-//         status: "done", group: "test",
-//         startDate: new Date("December 17, 1995 03:24:00"),
-//         dueDate: new Date("December 17, 1995 03:24:00"),
-//         repeat: {
-//             time: 3600000,
-//             next: new Date("December 17, 1995 03:24:00"),
-//         }
-//     },
-//     {
-//         id: 4,
-//         title: "Task1",
-//         priority: 0,
-//         tags: {
-//             main: "main tag",
-//             otherTags: ["other1", "other2", "other3"],
-//         },
-//         assignee : "test assignee",
-//         status: "done", group: "test",
-//         startDate: new Date("December 17, 1995 03:24:00"),
-//         dueDate: new Date("December 17, 1995 03:24:00"),
-//         repeat: {
-//             time: 3600000,
-//             next: new Date("December 17, 1995 03:24:00"),
-//         }
-//     },
-//     {
-//         id: 5,
-//         title: "Task2",
-//         priority: 0,
-//         tags: {
-//             main: "main tag",
-//             otherTags: ["other1", "other2", "other3"],
-//         },
-//         assignee : "test assignee",
-//         status: "done", group: "test",
-//         startDate: new Date("December 17, 1995 03:24:00"),
-//         dueDate: new Date("December 17, 1995 03:24:00"),
-//         repeat: {
-//             time: 3600000,
-//             next: new Date("December 17, 1995 03:24:00"),
-//         }
-//     },
-//     {
-//         id: 6,
-//         title: "Task333",
-//         priority: 0,
-//         tags: {
-//             main: "main tag",
-//             otherTags: ["other1", "other2", "other3"],
-//         },
-//         assignee : "test assignee",
-//         status: "done", group: "test",
-//         startDate: new Date("December 17, 1995 03:24:00"),
-//         dueDate: new Date("December 17, 1995 03:24:00"),
-//         repeat: {
-//             time: 3600000,
-//             next: new Date("December 17, 1995 03:24:00"),
-//         }
-//     },
-//     {
-//         id: 7,
-//         title: "Task1",
-//         priority: 0,
-//         tags: {
-//             main: "main tag",
-//             otherTags: ["other1", "other2", "other3"],
-//         },
-//         assignee : "test assignee",
-//         status: "done", group: "test",
-//         startDate: new Date("December 17, 1995 03:24:00"),
-//         dueDate: new Date("December 17, 1995 03:24:00"),
-//         repeat: {
-//             time: 3600000,
-//             next: new Date("December 17, 1995 03:24:00"),
-//         }
-//     },
-//     {
-//         id: 8,
-//         title: "Task2",
-//         priority: 0,
-//         tags: {
-//             main: "main tag",
-//             otherTags: ["other1", "other2", "other3"],
-//         },
-//         assignee : "test assignee",
-//         status: "done", group: "test",
-//         startDate: new Date("December 17, 1995 03:24:00"),
-//         dueDate: new Date("December 17, 1995 03:24:00"),
-//         repeat: {
-//             time: 3600000,
-//             next: new Date("December 17, 1995 03:24:00"),
-//         }
-//     },
-//     {
-//         id: 9,
-//         title: "Task333",
-//         priority: 0,
-//         tags: {
-//             main: "main tag",
-//             otherTags: ["other1", "other2", "other3"],
-//         },
-//         assignee : "test assignee",
-//         status: "done", group: "test",
-//         startDate: new Date("December 17, 1995 03:24:00"),
-//         dueDate: new Date("December 17, 1995 03:24:00"),
-//         repeat: {
-//             time: 3600000,
-//             next: new Date("December 17, 1995 03:24:00"),
-//         }
-//     },
-//     {
-//         id: 10,
-//         title: "Task1",
-//         priority: 0,
-//         tags: {
-//             main: "main tag",
-//             otherTags: ["other1", "other2", "other3"],
-//         },
-//         assignee : "test assignee",
-//         status: "done", group: "test",
-//         startDate: new Date("December 17, 1995 03:24:00"),
-//         dueDate: new Date("December 17, 1995 03:24:00"),
-//         repeat: {
-//             time: 3600000,
-//             next: new Date("December 17, 1995 03:24:00"),
-//         }
-//     },
-//     {
-//         id: 11,
-//         title: "Task2",
-//         priority: 0,
-//         tags: {
-//             main: "main tag",
-//             otherTags: ["other1", "other2", "other3"],
-//         },
-//         assignee : "test assignee",
-//         status: "done", group: "test",
-//         startDate: new Date("December 17, 1995 03:24:00"),
-//         dueDate: new Date("December 17, 1995 03:24:00"),
-//         repeat: {
-//             time: 3600000,
-//             next: new Date("December 17, 1995 03:24:00"),
-//         }
-//     },
-//     {
-//         id: 12,
-//         title: "Task333",
-//         priority: 0,
-//         tags: {
-//             main: "main tag",
-//             otherTags: ["other1", "other2", "other3"],
-//         },
-//         assignee : "test assignee",
-//         status: "done", group: "test",
-//         startDate: new Date("December 17, 1995 03:24:00"),
-//         dueDate: new Date("December 17, 1995 03:24:00"),
-//         repeat: {
-//             time: 3600000,
-//             next: new Date("December 17, 1995 03:24:00"),
-//         }
-//     },
-//     {
-//         id: 13,
-//         title: "Task1",
-//         priority: 0,
-//         tags: {
-//             main: "main tag",
-//             otherTags: ["other1", "other2", "other3"],
-//         },
-//         assignee : "test assignee",
-//         status: "done", group: "test",
-//         startDate: new Date("December 17, 1995 03:24:00"),
-//         dueDate: new Date("December 17, 1995 03:24:00"),
-//         repeat: {
-//             time: 3600000,
-//             next: new Date("December 17, 1995 03:24:00"),
-//         }
-//     },
-//     {
-//         id: 14,
-//         title: "Task2",
-//         priority: 0,
-//         tags: {
-//             main: "main tag",
-//             otherTags: ["other1", "other2", "other3"],
-//         },
-//         assignee : "test assignee",
-//         status: "done", group: "test",
-//         startDate: new Date("December 17, 1995 03:24:00"),
-//         dueDate: new Date("December 17, 1995 03:24:00"),
-//         repeat: {
-//             time: 3600000,
-//             next: new Date("December 17, 1995 03:24:00"),
-//         }
-//     },
-//     {
-//         id: 15,
-//         title: "Task333",
-//         priority: 0,
-//         tags: {
-//             main: "main tag",
-//             otherTags: ["other1", "other2", "other3"],
-//         },
-//         assignee : "test assignee",
-//         status: "done", group: "test",
-//         startDate: new Date("December 17, 1995 03:24:00"),
-//         dueDate: new Date("December 17, 1995 03:24:00"),
-//         repeat: {
-//             time: 3600000,
-//             next: new Date("December 17, 1995 03:24:00"),
-//         }
-//     },
-//     {
-//         id: 16,
-//         title: "Task1",
-//         priority: 0,
-//         tags: {
-//             main: "main tag",
-//             otherTags: ["other1", "other2", "other3"],
-//         },
-//         assignee : "test assignee",
-//         status: "done", group: "test",
-//         startDate: new Date("December 17, 1995 03:24:00"),
-//         dueDate: new Date("December 17, 1995 03:24:00"),
-//         repeat: {
-//             time: 3600000,
-//             next: new Date("December 17, 1995 03:24:00"),
-//         }
-//     },
-//     {
-//         id: 17,
-//         title: "Task2",
-//         priority: 0,
-//         tags: {
-//             main: "main tag",
-//             otherTags: ["other1", "other2", "other3"],
-//         },
-//         assignee : "test assignee",
-//         status: "done", group: "test",
-//         startDate: new Date("December 17, 1995 03:24:00"),
-//         dueDate: new Date("December 17, 1995 03:24:00"),
-//         repeat: {
-//             time: 3600000,
-//             next: new Date("December 17, 1995 03:24:00"),
-//         }
-//     },
-//     {
-//         id: 18,
-//         title: "Task333",
-//         priority: 0,
-//         tags: {
-//             main: "main tag",
-//             otherTags: ["other1", "other2", "other3"],
-//         },
-//         assignee : "test assignee",
-//         status: "done", group: "test",
-//         startDate: new Date("December 17, 1995 03:24:00"),
-//         dueDate: new Date("December 17, 1995 03:24:00"),
-//         repeat: {
-//             time: 3600000,
-//             next: new Date("December 17, 1995 03:24:00"),
-//         }
-//     },
-//     {
-//         id: 19,
-//         title: "Task1",
-//         priority: 0,
-//         tags: {
-//             main: "main tag",
-//             otherTags: ["other1", "other2", "other3"],
-//         },
-//         assignee : "test assignee",
-//         status: "done", group: "test",
-//         startDate: new Date("December 17, 1995 03:24:00"),
-//         dueDate: new Date("December 17, 1995 03:24:00"),
-//         repeat: {
-//             time: 3600000,
-//             next: new Date("December 17, 1995 03:24:00"),
-//         }
-//     },
-//     {
-//         id: 20,
-//         title: "Task2",
-//         priority: 0,
-//         tags: {
-//             main: "main tag",
-//             otherTags: ["other1", "other2", "other3"],
-//         },
-//         assignee : "test assignee",
-//         status: "done", group: "test",
-//         startDate: new Date("December 17, 1995 03:24:00"),
-//         dueDate: new Date("December 17, 1995 03:24:00"),
-//         repeat: {
-//             time: 3600000,
-//             next: new Date("December 17, 1995 03:24:00"),
-//         }
-//     },
-//     {
-//         id: 21,
-//         title: "Task333",
-//         priority: 0,
-//         tags: {
-//             main: "main tag",
-//             otherTags: ["other1", "other2", "other3"],
-//         },
-//         assignee : "test assignee",
-//         status: "done", group: "test",
-//         startDate: new Date("December 17, 1995 03:24:00"),
-//         dueDate: new Date("December 17, 1995 03:24:00"),
-//         repeat: {
-//             time: 3600000,
-//             next: new Date("December 17, 1995 03:24:00"),
-//         }
-//     },
-//     {
-//         id: 22,
-//         title: "Task1",
-//         priority: 0,
-//         tags: {
-//             main: "main tag",
-//             otherTags: ["other1", "other2", "other3"],
-//         },
-//         assignee : "test assignee",
-//         status: "done", group: "test",
-//         startDate: new Date("December 17, 1995 03:24:00"),
-//         dueDate: new Date("December 17, 1995 03:24:00"),
-//         repeat: {
-//             time: 3600000,
-//             next: new Date("December 17, 1995 03:24:00"),
-//         }
-//     },
-//     {
-//         id: 23,
-//         title: "Task2",
-//         priority: 0,
-//         tags: {
-//             main: "main tag",
-//             otherTags: ["other1", "other2", "other3"],
-//         },
-//         assignee : "test assignee",
-//         status: "done", group: "test",
-//         startDate: new Date("December 17, 1995 03:24:00"),
-//         dueDate: new Date("December 17, 1995 03:24:00"),
-//         repeat: {
-//             time: 3600000,
-//             next: new Date("December 17, 1995 03:24:00"),
-//         }
-//     },
-//     {
-//         id: 24,
-//         title: "Task333",
-//         priority: 0,
-//         tags: {
-//             main: "main tag",
-//             otherTags: ["other1", "other2", "other3"],
-//         },
-//         assignee : "test assignee",
-//         status: "done", group: "test",
-//         startDate: new Date("December 17, 1995 03:24:00"),
-//         dueDate: new Date("December 17, 1995 03:24:00"),
-//         repeat: {
-//             time: 3600000,
-//             next: new Date("December 17, 1995 03:24:00"),
-//         }
-//     },
-//     {
-//         id: 25,
-//         title: "Task1",
-//         priority: 0,
-//         tags: {
-//             main: "main tag",
-//             otherTags: ["other1", "other2", "other3"],
-//         },
-//         assignee : "test assignee",
-//         status: "done", group: "test",
-//         startDate: new Date("December 17, 1995 03:24:00"),
-//         dueDate: new Date("December 17, 1995 03:24:00"),
-//         repeat: {
-//             time: 3600000,
-//             next: new Date("December 17, 1995 03:24:00"),
-//         }
-//     },
-//     {
-//         id: 26,
-//         title: "Task2",
-//         priority: 0,
-//         tags: {
-//             main: "main tag",
-//             otherTags: ["other1", "other2", "other3"],
-//         },
-//         assignee : "test assignee",
-//         status: "done", group: "test",
-//         startDate: new Date("December 17, 1995 03:24:00"),
-//         dueDate: new Date("December 17, 1995 03:24:00"),
-//         repeat: {
-//             time: 3600000,
-//             next: new Date("December 17, 1995 03:24:00"),
-//         }
-//     },
-//     {
-//         id: 27,
-//         title: "Task333",
-//         priority: 0,
-//         tags: {
-//             main: "main tag",
-//             otherTags: ["other1", "other2", "other3"],
-//         },
-//         assignee : "test assignee",
-//         status: "done", group: "test",
-//         startDate: new Date("December 17, 1995 03:24:00"),
-//         dueDate: new Date("December 17, 1995 03:24:00"),
-//         repeat: {
-//             time: 3600000,
-//             next: new Date("December 17, 1995 03:24:00"),
-//         }
-//     },
-//     {
-//         id: 28,
-//         title: "Task1",
-//         priority: 0,
-//         tags: {
-//             main: "main tag",
-//             otherTags: ["other1", "other2", "other3"],
-//         },
-//         assignee : "test assignee",
-//         status: "done", group: "test",
-//         startDate: new Date("December 17, 1995 03:24:00"),
-//         dueDate: new Date("December 17, 1995 03:24:00"),
-//         repeat: {
-//             time: 3600000,
-//             next: new Date("December 17, 1995 03:24:00"),
-//         }
-//     },
-//     {
-//         id: 29,
-//         title: "Task2",
-//         priority: 0,
-//         tags: {
-//             main: "main tag",
-//             otherTags: ["other1", "other2", "other3"],
-//         },
-//         assignee : "test assignee",
-//         status: "done", group: "test",
-//         startDate: new Date("December 17, 1995 03:24:00"),
-//         dueDate: new Date("December 17, 1995 03:24:00"),
-//         repeat: {
-//             time: 3600000,
-//             next: new Date("December 17, 1995 03:24:00"),
-//         }
-//     },
-//     {
-//         id: 30,
-//         title: "Task333",
-//         priority: 0,
-//         tags: {
-//             main: "main tag",
-//             otherTags: ["other1", "other2", "other3"],
-//         },
-//         assignee : "test assignee",
-//         status: "done", group: "test",
-//         startDate: new Date("December 17, 1995 03:24:00"),
-//         dueDate: new Date("December 17, 1995 03:24:00"),
-//         repeat: {
-//             time: 3600000,
-//             next: new Date("December 17, 1995 03:24:00"),
-//         }
-//     },
-//     {
-//         id: 31,
-//         title: "Task1",
-//         priority: 0,
-//         tags: {
-//             main: "main tag",
-//             otherTags: ["other1", "other2", "other3"],
-//         },
-//         assignee : "test assignee",
-//         status: "done", group: "test",
-//         startDate: new Date("December 17, 1995 03:24:00"),
-//         dueDate: new Date("December 17, 1995 03:24:00"),
-//         repeat: {
-//             time: 3600000,
-//             next: new Date("December 17, 1995 03:24:00"),
-//         }
-//     },
-//     {
-//         id: 32,
-//         title: "Task2",
-//         priority: 0,
-//         tags: {
-//             main: "main tag",
-//             otherTags: ["other1", "other2", "other3"],
-//         },
-//         assignee : "test assignee",
-//         status: "done", group: "test",
-//         startDate: new Date("December 17, 1995 03:24:00"),
-//         dueDate: new Date("December 17, 1995 03:24:00"),
-//         repeat: {
-//             time: 3600000,
-//             next: new Date("December 17, 1995 03:24:00"),
-//         }
-//     },
-//     {
-//         id: 33,
-//         title: "Task333",
-//         priority: 0,
-//         tags: {
-//             main: "main tag",
-//             otherTags: ["other1", "other2", "other3"],
-//         },
-//         assignee : "test assignee",
-//         status: "done", group: "test",
-//         startDate: new Date("December 17, 1995 03:24:00"),
-//         dueDate: new Date("December 17, 1995 03:24:00"),
-//         repeat: {
-//             time: 3600000,
-//             next: new Date("December 17, 1995 03:24:00"),
-//         }
-//     },
-//     {
-//         id: 34,
-//         title: "Task1",
-//         priority: 0,
-//         tags: {
-//             main: "main tag",
-//             otherTags: ["other1", "other2", "other3"],
-//         },
-//         assignee : "test assignee",
-//         status: "done", group: "test",
-//         startDate: new Date("December 17, 1995 03:24:00"),
-//         dueDate: new Date("December 17, 1995 03:24:00"),
-//         repeat: {
-//             time: 3600000,
-//             next: new Date("December 17, 1995 03:24:00"),
-//         }
-//     },
-//     {
-//         id: 35,
-//         title: "Task2",
-//         priority: 0,
-//         tags: {
-//             main: "main tag",
-//             otherTags: ["other1", "other2", "other3"],
-//         },
-//         assignee : "test assignee",
-//         status: "done", group: "test",
-//         startDate: new Date("December 17, 1995 03:24:00"),
-//         dueDate: new Date("December 17, 1995 03:24:00"),
-//         repeat: {
-//             time: 3600000,
-//             next: new Date("December 17, 1995 03:24:00"),
-//         }
-//     },
-//     {
-//         id: 36,
-//         title: "Task333",
-//         priority: 0,
-//         tags: {
-//             main: "main tag",
-//             otherTags: ["other1", "other2", "other3"],
-//         },
-//         assignee : "test assignee",
-//         status: "done", group: "test",
-//         startDate: new Date("December 17, 1995 03:24:00"),
-//         dueDate: new Date("December 17, 1995 03:24:00"),
-//         repeat: {
-//             time: 3600000,
-//             next: new Date("December 17, 1995 03:24:00"),
-//         }
-//     },
-//     ]
+    return NextResponse.json(
+        { message: "Task created", task },
+        { status: 201 }
+    );
+}

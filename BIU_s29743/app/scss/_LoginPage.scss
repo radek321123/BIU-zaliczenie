@@ -8,7 +8,7 @@
   .login-page-interface {
     @include center;
     width: 345px;
-    height: 416px;
+    height: 500px;
     flex-direction: column;
     padding: 30px;
     border-radius: 15px;
@@ -53,6 +53,16 @@
       margin: 10px;
       color: $light-base;
       text-decoration: underline;
+    }
+
+    input {
+      width: 300px;
+      height: 30px;
+    }
+
+    span {
+      display: block;
+      position: relative;
     }
 
     input, button {

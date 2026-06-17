@@ -1,21 +1,20 @@
 "use client"
 
 import Navbar from "./components/Navbar";
-import "../contexts/TasksContext";
 import {TasksProvider} from "../contexts/TasksContext";
-import {UsersProvider} from "../contexts/UsersContext";
+import {GroupsProvider} from "../contexts/GroupsContext";
 
 
-export default ({children}) => {
+export default function LoggedInLayout({children}) {
 
     return (
         <div className="App">
-            <UsersProvider>
+            <GroupsProvider>
                 <TasksProvider>
                     <Navbar/>
                     {children}
                 </TasksProvider>
-            </UsersProvider>
+            </GroupsProvider>
         </div>
     )
 }

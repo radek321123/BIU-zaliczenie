@@ -1,21 +1,21 @@
 "use client";
 
 import {createContext, useContext, useEffect, useReducer} from "react";
-import {initialUsersState, userReducer} from "../reducers/UserReducer";
+import {initialGroupsState, groupsReducer} from "../reducers/GroupsReducer";
 
-const UserContext = createContext(null);
+const GroupContext = createContext(null);
 
-export function UsersProvider({ children }) {
-    const [users, dispatch] = useReducer(userReducer, initialUsersState);
+export function GroupsProvider({ children }) {
+    const [groups, dispatch] = useReducer(groupsReducer, initialGroupsState);
 
     async function fetchData() {
         dispatch({ type: 'FETCH_START' });
         try {
-            const res = await fetch("/api/users");
+            const res = await fetch("/api/groups");
             const json = await res.json();
             dispatch({ type: 'FETCH_SUCCESS', payload: json });
         } catch (err) {
-            console.error("Users API error:", err);
+            console.error("Groups API error:", err);
             dispatch({ type: 'FETCH_ERROR', payload: err.message });
         }
     }
@@ -25,24 +25,23 @@ export function UsersProvider({ children }) {
     }, [dispatch]);
 
     return (
-        <UserContext.Provider
+        <GroupContext.Provider
             value={{
-                users,
+                groups,
                 dispatch,
             }}
         >
             {children}
-        </UserContext.Provider>
+        </GroupContext.Provider>
     );
 }
 
-export function useUsers() {
-    const context = useContext(UserContext);
+export function useGroups() {
+    const context = useContext(GroupContext);
 
     if (!context) {
-        throw new Error("useUsers must be used inside Provider");
+        throw new Error("useGroups must be used inside Provider");
     }
 
     return context;
 }
-
