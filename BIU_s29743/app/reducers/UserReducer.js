@@ -40,6 +40,23 @@ export const userReducer = (state, action) => {
                 loggedIn: action.payload,
             }
 
+        case 'LOGOUT_USER':
+            return {
+                ...state,
+                loggedIn: null,
+            }
+
+        case 'UPDATE_USER':
+            return {
+                ...state,
+                users: state.users.map((u) =>
+                    u.id === action.payload.id ? action.payload : u
+                ),
+                loggedIn: state.loggedIn?.id === action.payload.id
+                    ? action.payload
+                    : state.loggedIn,
+            }
+
 
         default:
             throw new Error(`Unknown action type: ${action.type}`);

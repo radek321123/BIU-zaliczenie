@@ -32,7 +32,19 @@ export async function POST(request) {
         );
     }
 
-    const group = { id: nextGroupId(), name };
+    let parentId = null;
+    if (body?.parentId != null && body.parentId !== "") {
+        const candidate = Number(body.parentId);
+        if (!groupsDB.some((g) => g.id === candidate)) {
+            return NextResponse.json(
+                { error: "Parent group does not exist" },
+                { status: 400 }
+            );
+        }
+        parentId = candidate;
+    }
+
+    const group = { id: nextGroupId(), name, parentId, permissions: {} };
     groupsDB.push(group);
 
     return NextResponse.json(

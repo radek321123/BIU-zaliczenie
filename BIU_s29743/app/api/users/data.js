@@ -1,0 +1,35 @@
+export let usersDB = [
+    {
+        id: 1,
+        firstName: "Radosław",
+        lastName: "Krawiec",
+        email: "s29743@pjwstk.edu.pl",
+        password: "admin123",
+        groups: ["admin", "pjatk", "Rumia", "pjatk-frontend"],
+        notifyEmail: true,
+        notifyFrequency: "immediate",
+        notifyTypes: ["due_soon", "overdue", "assigned"],
+    },
+    {
+        id: 2,
+        firstName: "Jan",
+        lastName: "Kowalski",
+        email: "JK@gmail.com",
+        password: "jankowalski123",
+        groups: ["pjatk"],
+        notifyEmail: true,
+        notifyFrequency: "daily",
+        notifyTypes: ["due_soon", "overdue"],
+    },
+    {
+        id: 3,
+        firstName: "Janina",
+        lastName: "Kowalska",
+        email: "JK2@gmail.pl",
+        password: "JK123",
+        groups: ["Rumia"],
+        notifyEmail: false,
+        notifyFrequency: "weekly",
+        notifyTypes: ["overdue"],
+    }
+]

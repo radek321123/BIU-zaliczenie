@@ -33,6 +33,14 @@ export const groupsReducer = (state, action) => {
                 groups: [...state.groups, action.payload],
             };
 
+        case 'UPDATE_GROUP':
+            return {
+                ...state,
+                groups: state.groups.map((g) =>
+                    g.id === action.payload.id ? action.payload : g
+                ),
+            };
+
         default:
             throw new Error(`Unknown action type: ${action.type}`);
     }

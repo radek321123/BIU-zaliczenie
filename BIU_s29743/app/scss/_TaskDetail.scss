@@ -1,0 +1,169 @@
+.task-detail {
+  @include center;
+  height: 100%;
+  width: 100%;
+
+  // The edit form has many more fields than the view, so it doesn't fit
+  // inside the view's fixed-height card. Instead of clipping content into a
+  // tiny inner scrollbox, let this outer container scroll the whole page.
+  &.task-detail-editing {
+    align-items: center;
+    justify-content: flex-start;
+    overflow-y: auto;
+    padding: 30px 0;
+
+    .task-detail-interface {
+      max-height: none;
+      overflow-y: visible;
+      margin: auto 0;
+    }
+  }
+
+  .task-detail-interface {
+    @include center;
+    align-items: stretch;
+    width: 380px;
+    max-width: 90vw;
+    max-height: 90vh;
+    overflow-y: auto;
+    padding: 30px;
+    border-radius: 15px;
+    border: 3px solid $base-color;
+    background-color: $light-base;
+    @include form-card;
+    @include labels-section;
+    @include attachments-section;
+    @include schedule-section;
+
+    h1 {
+      color: $base-color;
+      text-align: center;
+      margin: 0 0 10px;
+    }
+
+    h3 {
+      color: $base-color;
+      margin: 0 0 6px;
+    }
+
+    p {
+      color: $base-color;
+      margin: 4px 0;
+    }
+
+    .priority1 {
+      color: red;
+    }
+
+    .priority2 {
+      color: darkorange;
+    }
+
+    .priority3 {
+      color: green;
+    }
+
+    .priority4 {
+      color: $base-color;
+    }
+
+    .task-schedule {
+      margin: 8px 0;
+      padding: 10px;
+      border: 2px solid $mid-color;
+      border-radius: 10px;
+    }
+
+    .task-attachments,
+    .task-notes {
+      margin: 8px 0;
+      padding: 10px;
+      border: 2px solid $mid-color;
+      border-radius: 10px;
+
+      ul {
+        margin: 0;
+        padding-left: 18px;
+      }
+
+      a {
+        color: $base-color;
+        word-break: break-all;
+      }
+    }
+
+    .progress-slider {
+      width: 100%;
+      margin: 4px 0;
+      -webkit-appearance: none;
+      appearance: none;
+      height: 10px;
+      border-radius: 5px;
+      background: linear-gradient(to right, $base-color var(--progress-value, 0%), #e0e0e0 var(--progress-value, 0%));
+      outline: none;
+
+      &::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        appearance: none;
+        width: 16px;
+        height: 16px;
+        border-radius: 50%;
+        background: $base-color;
+        cursor: pointer;
+        border: 2px solid $light-base;
+      }
+
+      &::-moz-range-thumb {
+        width: 16px;
+        height: 16px;
+        border-radius: 50%;
+        background: $base-color;
+        cursor: pointer;
+        border: 2px solid $light-base;
+      }
+
+      &::-moz-range-track {
+        height: 10px;
+        border-radius: 5px;
+        background: #e0e0e0;
+      }
+
+      &::-moz-range-progress {
+        height: 10px;
+        border-radius: 5px;
+        background: $base-color;
+      }
+
+      &:disabled {
+        opacity: 0.7;
+
+        &::-webkit-slider-thumb,
+        &::-moz-range-thumb {
+          cursor: default;
+        }
+      }
+    }
+
+    .add-to-calendar {
+      margin-top: 8px;
+      align-self: flex-start;
+      padding: 6px 10px;
+      color: $base-color;
+      border-radius: 8px;
+      border: 2px solid $base-color;
+      background-color: $light-base;
+      cursor: pointer;
+    }
+
+    .task-detail-actions,
+    .task-edit-actions {
+      display: flex;
+      gap: 10px;
+
+      button {
+        flex: 1;
+        margin-top: 0;
+      }
+    }
+  }
+}

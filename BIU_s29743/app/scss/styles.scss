@@ -5,20 +5,300 @@
   justify-content: center;
 }
 
+@mixin responsive-grid {
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+
+  @media only screen and (max-width: 2560px) {
+    grid-template-columns: repeat(7, 1fr);
+  }
+
+  @media only screen and (max-width: 1920px) {
+    grid-template-columns: repeat(6, 1fr);
+  }
+
+  @media only screen and (max-width: 1600px) {
+    grid-template-columns: repeat(5, 1fr);
+  }
+
+  @media only screen and (max-width: 1300px) {
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  @media only screen and (max-width: 1000px) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
 $base-color: #4a84f7;
 $light-base: #f0fcfe;
 $mid-color: #dfdfdf;
+
+@mixin form-card {
+  form {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    width: 100%;
+  }
+
+  label {
+    color: $base-color;
+    font-size: 0.9em;
+  }
+
+  input,
+  textarea,
+  select {
+    width: 100%;
+    padding: 6px;
+    color: $base-color;
+    border-radius: 5px;
+    border: 1px solid $base-color;
+    background-color: #fff;
+  }
+
+  textarea {
+    min-height: 70px;
+    resize: vertical;
+  }
+
+  button {
+    margin-top: 14px;
+    padding: 8px;
+    background-color: $base-color;
+    color: $light-base;
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
+
+    &:disabled {
+      opacity: 0.6;
+      cursor: default;
+    }
+  }
+}
+
+@mixin schedule-section {
+  .schedule-section {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 8px;
+    padding: 10px;
+    border: 2px solid $mid-color;
+    border-radius: 10px;
+
+    legend {
+      padding: 0 6px;
+      color: $base-color;
+      font-weight: bold;
+    }
+
+    .schedule-mode {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+
+      label {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+    }
+
+    .repeat-toggle {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .repeat-interval {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    input[type="checkbox"],
+    input[type="radio"] {
+      width: auto;
+    }
+  }
+}
+
+@mixin attachments-section {
+  .attachments-section {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 8px;
+    padding: 10px;
+    border: 2px solid $mid-color;
+    border-radius: 10px;
+
+    legend {
+      padding: 0 6px;
+      color: $base-color;
+      font-weight: bold;
+    }
+
+    .attachments-list {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .attachment-row {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+
+      input {
+        flex: 1;
+      }
+
+      button {
+        margin-top: 0;
+        white-space: nowrap;
+      }
+    }
+
+    .add-attachment {
+      margin-top: 0;
+      align-self: flex-start;
+    }
+  }
+}
+
+@mixin labels-section {
+  .labels-section {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 8px;
+    padding: 10px;
+    border: 2px solid $mid-color;
+    border-radius: 10px;
+
+    legend {
+      padding: 0 6px;
+      color: $base-color;
+      font-weight: bold;
+    }
+
+    .labels-list {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .label-row {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+
+      input {
+        flex: 1;
+      }
+
+      button {
+        margin-top: 0;
+        white-space: nowrap;
+      }
+    }
+
+    .add-label {
+      margin-top: 0;
+      align-self: flex-start;
+    }
+  }
+}
 
 @import "Nav";
 @import "LoginPage";
 @import "TasksPage";
 @import "AddTask";
+@import "TaskDetail";
+@import "Profile";
+@import "Admin";
+@import "Dashboard";
 
 .field-error {
   display: block;
   color: #d33;
   font-size: 0.85em;
   min-height: 1em;
+}
+
+.task-labels {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 4px;
+}
+
+.loading-state {
+  @include center;
+  flex-direction: row;
+  gap: 10px;
+  height: 100%;
+  width: 100%;
+  color: $base-color;
+}
+
+.loading-spinner {
+  width: 22px;
+  height: 22px;
+  border: 3px solid $mid-color;
+  border-top-color: $base-color;
+  border-radius: 50%;
+  animation: loading-spin 0.8s linear infinite;
+}
+
+@keyframes loading-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.label-chip {
+  padding: 2px 10px;
+  border-radius: 12px;
+  border: 2px solid $base-color;
+  background-color: $light-base;
+  color: $base-color;
+  font-size: 0.8em;
+}
+
+.progress-bar {
+  width: 100%;
+  height: 8px;
+  border-radius: 4px;
+  background-color: $mid-color;
+  overflow: hidden;
+}
+
+.progress-bar-fill {
+  height: 100%;
+  background-color: $base-color;
+  transition: width 0.2s ease;
+}
+
+.task-progress {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin: 8px 4px;
+
+  label {
+    color: $base-color;
+    font-size: 0.85em;
+  }
+
+  .progress-label {
+    font-size: 0.8em;
+    color: $base-color;
+  }
 }
 
 
@@ -55,9 +335,19 @@ body {
   max-width: 3840px;
 }
 
-.app {
-  @include center;
+.App {
+  display: flex;
+  flex-direction: column;
   width: 100%;
   height: 100%;
   max-width: 3840px;
+
+  > nav {
+    flex: none;
+  }
+
+  > *:not(nav) {
+    flex: 1;
+    min-height: 0;
+  }
 }

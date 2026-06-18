@@ -3,10 +3,18 @@
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
 import { useFormStatus } from "react-dom";
 import { useTasks } from "../../contexts/TasksContext";
 import { useUsers } from "../../contexts/UsersContext";
 import { useGroups } from "../../contexts/GroupsContext";
+import Loading from "../../components/Loading";
+
+const REPEAT_PRESETS = {
+    daily: { days: 1, hours: 0 },
+    weekly: { days: 7, hours: 0 },
+    monthly: { days: 30, hours: 0 },
+};
 
 function SubmitButton() {
     const { pending } = useFormStatus();
@@ -23,20 +31,57 @@ export default function AddTask() {
     const { users } = useUsers();
     const { groups } = useGroups();
 
+    const userGroups = users.loggedIn?.groups || [];
+    // "read"-only members can browse a shared list but not add tasks to it.
+    const availableGroups = groups.groups.filter(
+        (g) => userGroups.includes(g.name) && (g.permissions?.[users.loggedIn?.email] || "edit") !== "read"
+    );
+
+    const [attachments, setAttachments] = useState([""]);
+
+    function handleAttachmentChange(index, value) {
+        setAttachments((prev) => prev.map((a, i) => (i === index ? value : a)));
+    }
+
+    function addAttachmentField() {
+        setAttachments((prev) => [...prev, ""]);
+    }
+
+    function removeAttachmentField(index) {
+        setAttachments((prev) => prev.filter((_, i) => i !== index));
+    }
+
+    const [labels, setLabels] = useState([""]);
+
+    function handleLabelChange(index, value) {
+        setLabels((prev) => prev.map((l, i) => (i === index ? value : l)));
+    }
+
+    function addLabelField() {
+        setLabels((prev) => [...prev, ""]);
+    }
+
+    function removeLabelField(index) {
+        setLabels((prev) => prev.filter((_, i) => i !== index));
+    }
+
     const formik = useFormik({
         initialValues: {
             title: "",
             description: "",
+            notes: "",
             assignee: "",
             group: "",
             priority: "1",
             tagMain: "UI",
+            progress: 0,
             startMode: "now",
             startDate: "",
             dueDate: "",
             repeatEnabled: false,
-            repeatDays: "",
-            repeatHours: "",
+            repeatFrequency: "daily",
+            repeatDays: REPEAT_PRESETS.daily.days,
+            repeatHours: REPEAT_PRESETS.daily.hours,
         },
         validationSchema: Yup.object({
             title: Yup.string().trim().required("Title is required"),
@@ -94,10 +139,14 @@ export default function AddTask() {
                     body: JSON.stringify({
                         title: values.title,
                         description: values.description,
+                        notes: values.notes,
                         assignee: values.assignee,
                         group: values.group,
                         priority: values.priority,
                         tagMain: values.tagMain,
+                        progress: values.progress,
+                        otherTags: labels,
+                        attachments,
                         schedule,
                     }),
                 });
@@ -116,10 +165,38 @@ export default function AddTask() {
         },
     });
 
+    if (groups.loading) {
+        return (
+            <div className="add-task-page">
+                <div className="add-task-interface">
+                    <Loading label="Loading groups…" />
+                </div>
+            </div>
+        );
+    }
+
     const fieldError = (name) =>
         formik.touched[name] && formik.errors[name] ? (
             <span className="field-error">{formik.errors[name]}</span>
         ) : null;
+
+    const assigneeOptions = formik.values.group
+        ? users.users.filter((u) => (u.groups || []).includes(formik.values.group))
+        : [];
+
+    function handleGroupChange(event) {
+        formik.setFieldValue("group", event.target.value);
+        formik.setFieldValue("assignee", "");
+    }
+
+    function handleRepeatFrequencyChange(event) {
+        const frequency = event.target.value;
+        formik.setFieldValue("repeatFrequency", frequency);
+        if (frequency !== "custom") {
+            formik.setFieldValue("repeatDays", REPEAT_PRESETS[frequency].days);
+            formik.setFieldValue("repeatHours", REPEAT_PRESETS[frequency].hours);
+        }
+    }
 
     return (
         <div className="add-task-page">
@@ -147,6 +224,31 @@ export default function AddTask() {
                         value={formik.values.description}
                     />
 
+                    <label htmlFor="notes">Notes</label>
+                    <textarea
+                        name="notes"
+                        id="notes"
+                        placeholder="Additional notes (separate from the description)"
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                        value={formik.values.notes}
+                    />
+
+                    <label htmlFor="group">Group</label>
+                    <select
+                        name="group"
+                        id="group"
+                        onChange={handleGroupChange}
+                        onBlur={formik.handleBlur}
+                        value={formik.values.group}
+                    >
+                        <option value="">Select a group</option>
+                        {availableGroups.map((g) => (
+                            <option key={g.id} value={g.name}>{g.name}</option>
+                        ))}
+                    </select>
+                    {fieldError("group")}
+
                     <label htmlFor="assignee">Assignee</label>
                     <select
                         name="assignee"
@@ -154,9 +256,12 @@ export default function AddTask() {
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
                         value={formik.values.assignee}
+                        disabled={!formik.values.group}
                     >
-                        <option value="">Select an assignee</option>
-                        {users.users.map((u) => {
+                        <option value="">
+                            {formik.values.group ? "Select an assignee" : "Select a group first"}
+                        </option>
+                        {assigneeOptions.map((u) => {
                             const fullName = `${u.firstName || ""} ${u.lastName || ""}`.trim();
                             return (
                                 <option key={u.id} value={u.email}>
@@ -166,21 +271,6 @@ export default function AddTask() {
                         })}
                     </select>
                     {fieldError("assignee")}
-
-                    <label htmlFor="group">Group</label>
-                    <select
-                        name="group"
-                        id="group"
-                        onChange={formik.handleChange}
-                        onBlur={formik.handleBlur}
-                        value={formik.values.group}
-                    >
-                        <option value="">Select a group</option>
-                        {groups.groups.map((g) => (
-                            <option key={g.id} value={g.name}>{g.name}</option>
-                        ))}
-                    </select>
-                    {fieldError("group")}
 
                     <label htmlFor="priority">Priority</label>
                     <select
@@ -210,6 +300,69 @@ export default function AddTask() {
                         <option value="Validation">Validation</option>
                         <option value="TEMP">TEMP</option>
                     </select>
+
+                    <label htmlFor="progress">Progress ({formik.values.progress}%)</label>
+                    <input
+                        type="range"
+                        min="0"
+                        max="100"
+                        name="progress"
+                        id="progress"
+                        onChange={formik.handleChange}
+                        value={formik.values.progress}
+                    />
+
+                    <fieldset className="labels-section">
+                        <legend>Labels</legend>
+                        <div className="labels-list">
+                            {labels.map((value, index) => (
+                                <div className="label-row" key={index}>
+                                    <input
+                                        type="text"
+                                        placeholder="e.g. urgent"
+                                        value={value}
+                                        onChange={(e) => handleLabelChange(index, e.target.value)}
+                                    />
+                                    <button
+                                        type="button"
+                                        onClick={() => removeLabelField(index)}
+                                        disabled={labels.length === 1}
+                                    >
+                                        Remove
+                                    </button>
+                                </div>
+                            ))}
+                        </div>
+                        <button type="button" className="add-label" onClick={addLabelField}>
+                            + Add label
+                        </button>
+                    </fieldset>
+
+                    <fieldset className="attachments-section">
+                        <legend>Attachments / links</legend>
+                        <div className="attachments-list">
+                            {attachments.map((value, index) => (
+                                <div className="attachment-row" key={index}>
+                                    <input
+                                        type="text"
+                                        placeholder="https://..."
+                                        value={value}
+                                        onChange={(e) => handleAttachmentChange(index, e.target.value)}
+                                    />
+                                    <button
+                                        type="button"
+                                        onClick={() => removeAttachmentField(index)}
+                                        disabled={attachments.length === 1}
+                                    >
+                                        Remove
+                                    </button>
+                                </div>
+                            ))}
+                        </div>
+                        <button type="button" className="add-attachment" onClick={addAttachmentField}>
+                            + Add link
+                        </button>
+                    </fieldset>
 
                     <fieldset className="schedule-section">
                         <legend>Scheduling</legend>
@@ -276,28 +429,45 @@ export default function AddTask() {
 
                         {formik.values.repeatEnabled ? (
                             <div className="repeat-interval">
-                                <label htmlFor="repeatDays">Every — days</label>
-                                <input
-                                    type="number"
-                                    min="0"
-                                    name="repeatDays"
-                                    id="repeatDays"
-                                    onChange={formik.handleChange}
-                                    onBlur={formik.handleBlur}
-                                    value={formik.values.repeatDays}
-                                />
-                                <label htmlFor="repeatHours">hours</label>
-                                <input
-                                    type="number"
-                                    min="0"
-                                    name="repeatHours"
-                                    id="repeatHours"
-                                    onChange={formik.handleChange}
-                                    onBlur={formik.handleBlur}
-                                    value={formik.values.repeatHours}
-                                />
-                                {fieldError("repeatDays")}
-                                {fieldError("repeatHours")}
+                                <label htmlFor="repeatFrequency">Repeat frequency</label>
+                                <select
+                                    name="repeatFrequency"
+                                    id="repeatFrequency"
+                                    onChange={handleRepeatFrequencyChange}
+                                    value={formik.values.repeatFrequency}
+                                >
+                                    <option value="daily">Daily</option>
+                                    <option value="weekly">Weekly</option>
+                                    <option value="monthly">Monthly</option>
+                                    <option value="custom">Custom</option>
+                                </select>
+
+                                {formik.values.repeatFrequency === "custom" ? (
+                                    <>
+                                        <label htmlFor="repeatDays">Every — days</label>
+                                        <input
+                                            type="number"
+                                            min="0"
+                                            name="repeatDays"
+                                            id="repeatDays"
+                                            onChange={formik.handleChange}
+                                            onBlur={formik.handleBlur}
+                                            value={formik.values.repeatDays}
+                                        />
+                                        <label htmlFor="repeatHours">hours</label>
+                                        <input
+                                            type="number"
+                                            min="0"
+                                            name="repeatHours"
+                                            id="repeatHours"
+                                            onChange={formik.handleChange}
+                                            onBlur={formik.handleBlur}
+                                            value={formik.values.repeatHours}
+                                        />
+                                        {fieldError("repeatDays")}
+                                        {fieldError("repeatHours")}
+                                    </>
+                                ) : null}
                             </div>
                         ) : null}
                     </fieldset>

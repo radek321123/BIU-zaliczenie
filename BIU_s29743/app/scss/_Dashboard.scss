@@ -1,0 +1,227 @@
+.dashboard-page {
+  @include center;
+  justify-content: flex-start;
+  height: 100%;
+  width: 100%;
+  overflow-y: auto;
+  padding: 20px;
+
+  .dashboard-interface {
+    width: 100%;
+    max-width: 900px;
+
+    .dashboard-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 20px;
+
+      h1 {
+        color: $base-color;
+        margin: 0;
+      }
+
+      select {
+        padding: 8px 12px;
+        color: $base-color;
+        border-radius: 8px;
+        border: 2px solid $base-color;
+        background-color: $light-base;
+      }
+    }
+
+    h2 {
+      color: $base-color;
+      font-size: 1.1em;
+      margin: 0 0 10px;
+    }
+
+    .dashboard-stats {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+
+    .stat-card {
+      flex: 1;
+      min-width: 120px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      padding: 16px;
+      border-radius: 12px;
+      border: 3px solid $base-color;
+      background-color: $light-base;
+
+      &.total {
+        background-color: $base-color;
+
+        .stat-count,
+        .stat-label {
+          color: $light-base;
+        }
+      }
+
+      .stat-count {
+        font-size: 2em;
+        font-weight: bold;
+        color: $base-color;
+      }
+
+      .stat-label {
+        color: $base-color;
+        font-size: 0.9em;
+      }
+    }
+
+    .dashboard-priorities {
+      margin-bottom: 24px;
+    }
+
+    .priority-bars {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .priority-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 6px 12px;
+      border-radius: 8px;
+      background-color: $light-base;
+      border: 2px solid $mid-color;
+    }
+
+    .priority-count {
+      color: $base-color;
+      font-weight: bold;
+    }
+
+    .dashboard-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .dashboard-task-row {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1fr;
+      gap: 10px;
+      align-items: center;
+      padding: 10px 12px;
+      border-radius: 8px;
+      border: 2px solid $base-color;
+      background-color: $light-base;
+      text-decoration: none;
+
+      &:hover {
+        background-color: #fff;
+      }
+    }
+
+    .dashboard-task-title {
+      font-weight: bold;
+      color: $base-color;
+    }
+
+    .dashboard-task-group,
+    .dashboard-task-status {
+      color: $base-color;
+      font-size: 0.9em;
+    }
+
+    .dashboard-empty {
+      color: $base-color;
+    }
+
+    .priority1 {
+      color: red;
+    }
+
+    .priority2 {
+      color: darkorange;
+    }
+
+    .priority3 {
+      color: green;
+    }
+
+    .priority4 {
+      color: $base-color;
+    }
+
+    .priority5 {
+      color: gray;
+    }
+
+    .dashboard-chart {
+      margin-bottom: 24px;
+
+      .status-chart {
+        width: 100%;
+        max-width: 240px;
+        height: 120px;
+      }
+
+      .status-bar {
+        &.status-bar-to-do {
+          fill: $mid-color;
+        }
+
+        &.status-bar-in-progress {
+          fill: darkorange;
+        }
+
+        &.status-bar-done {
+          fill: green;
+        }
+      }
+
+      .status-bar-count {
+        font-size: 6px;
+        fill: $base-color;
+      }
+
+      .status-chart-legend {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        margin-top: 6px;
+      }
+
+      .status-legend-item {
+        position: relative;
+        padding-left: 16px;
+        font-size: 0.85em;
+        color: $base-color;
+
+        &::before {
+          content: "";
+          position: absolute;
+          left: 0;
+          top: 50%;
+          transform: translateY(-50%);
+          width: 10px;
+          height: 10px;
+          border-radius: 2px;
+        }
+
+        &.status-bar-to-do::before {
+          background-color: $mid-color;
+        }
+
+        &.status-bar-in-progress::before {
+          background-color: darkorange;
+        }
+
+        &.status-bar-done::before {
+          background-color: green;
+        }
+      }
+    }
+  }
+}

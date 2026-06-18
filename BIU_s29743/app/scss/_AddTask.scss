@@ -14,99 +14,15 @@
     border-radius: 15px;
     border: 3px solid $base-color;
     background-color: $light-base;
+    @include form-card;
+    @include labels-section;
+    @include attachments-section;
+    @include schedule-section;
 
     h3 {
       color: $base-color;
       text-align: center;
       margin: 0 0 10px;
-    }
-
-    form {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-      width: 100%;
-    }
-
-    label {
-      color: $base-color;
-      font-size: 0.9em;
-    }
-
-    input,
-    textarea,
-    select {
-      width: 100%;
-      padding: 6px;
-      color: $base-color;
-      border-radius: 5px;
-      border: 1px solid $base-color;
-      background-color: #fff;
-    }
-
-    textarea {
-      min-height: 70px;
-      resize: vertical;
-    }
-
-    .schedule-section {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-      margin-top: 8px;
-      padding: 10px;
-      border: 2px solid $mid-color;
-      border-radius: 10px;
-
-      legend {
-        padding: 0 6px;
-        color: $base-color;
-        font-weight: bold;
-      }
-
-      .schedule-mode {
-        display: flex;
-        flex-direction: column;
-        gap: 4px;
-
-        label {
-          display: flex;
-          align-items: center;
-          gap: 6px;
-        }
-      }
-
-      .repeat-toggle {
-        display: flex;
-        align-items: center;
-        gap: 6px;
-      }
-
-      .repeat-interval {
-        display: flex;
-        flex-direction: column;
-        gap: 6px;
-      }
-
-      input[type="checkbox"],
-      input[type="radio"] {
-        width: auto;
-      }
-    }
-
-    button {
-      margin-top: 14px;
-      padding: 8px;
-      background-color: $base-color;
-      color: $light-base;
-      border-radius: 5px;
-      border: none;
-      cursor: pointer;
-
-      &:disabled {
-        opacity: 0.6;
-        cursor: default;
-      }
     }
   }
 }

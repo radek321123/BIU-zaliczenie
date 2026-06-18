@@ -9,45 +9,237 @@
 
 
   .tasks-filters {
-    padding: 0;
-    margin: 0;
     display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px;
     width: 100%;
-    height: 60px;
-    background-color: $mid-color;
-    position: sticky;
-    top: 60px;
-    left: 0;
-    border-radius: 0 0 10px 10px ;
-    border: 2px $base-color solid;
+    padding: 0 10px 10px;
+
+    input,
+    select {
+      padding: 6px 10px;
+      color: $base-color;
+      border-radius: 8px;
+      border: 2px solid $base-color;
+      background-color: $light-base;
+    }
+
+    input {
+      flex: 1;
+      min-width: 160px;
+    }
+
+    .multi-select-filter {
+      position: relative;
+
+      > button {
+        cursor: pointer;
+        padding: 6px 10px;
+        color: $base-color;
+        border-radius: 8px;
+        border: 2px solid $base-color;
+        background-color: $light-base;
+        white-space: nowrap;
+      }
+
+      .multi-select-panel {
+        position: absolute;
+        top: calc(100% + 4px);
+        left: 0;
+        z-index: 10;
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 6px;
+        min-width: 160px;
+        padding: 10px;
+        border-radius: 8px;
+        border: 2px solid $base-color;
+        background-color: #fff;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+
+        label {
+          display: flex;
+          align-items: center;
+          justify-content: flex-start;
+          gap: 6px;
+          color: $base-color;
+          text-align: left;
+          white-space: nowrap;
+        }
+
+        input[type="checkbox"] {
+          flex: none;
+          width: 16px;
+          height: 16px;
+          min-width: 0;
+        }
+
+        .multi-select-empty {
+          color: $mid-color;
+          font-size: 0.85em;
+          padding: 4px;
+        }
+
+        .multi-select-clear {
+          margin-top: 4px;
+          cursor: pointer;
+          padding: 4px 8px;
+          color: $base-color;
+          border-radius: 6px;
+          border: 1px solid $base-color;
+          background-color: $light-base;
+
+          &:disabled {
+            opacity: 0.5;
+            cursor: default;
+          }
+        }
+      }
+    }
+  }
+
+  .saved-views,
+  .data-import-export {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    padding: 0 10px 10px;
+
+    input,
+    select {
+      padding: 6px 10px;
+      color: $base-color;
+      border-radius: 8px;
+      border: 2px solid $base-color;
+      background-color: $light-base;
+    }
+
+    button {
+      cursor: pointer;
+      padding: 6px 10px;
+      color: $base-color;
+      border-radius: 8px;
+      border: 2px solid $base-color;
+      background-color: $light-base;
+      white-space: nowrap;
+
+      &:disabled {
+        opacity: 0.5;
+        cursor: default;
+      }
+    }
+
+    .import-tasks-label {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+      padding: 6px 10px;
+      color: $base-color;
+      border-radius: 8px;
+      border: 2px solid $base-color;
+      background-color: $light-base;
+
+      input[type="file"] {
+        max-width: 160px;
+      }
+    }
+  }
+
+  .tasks-folder-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    padding: 10px;
+
+    button {
+      cursor: pointer;
+      border-radius: 10px;
+      border: 2px solid $base-color;
+      background-color: $light-base;
+      color: $base-color;
+      padding: 6px 12px;
+    }
+
+    h2 {
+      color: $base-color;
+      margin: 0;
+    }
+
+    .breadcrumb {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .breadcrumb-sep {
+      color: $base-color;
+      opacity: 0.5;
+    }
+
+    .breadcrumb-current {
+      color: $base-color;
+      font-weight: bold;
+      padding: 6px 4px;
+    }
+  }
+
+  .folders-container {
+    width: 100%;
+    height: 100%;
+    overflow-y: scroll;
+    align-content: start;
+    align-items: start;
+    @include responsive-grid;
+
+    &.sub-folders {
+      height: auto;
+      max-height: 220px;
+      flex: none;
+      margin-bottom: 10px;
+      border-bottom: 2px solid $mid-color;
+      padding-bottom: 10px;
+    }
+
+    .folder {
+      margin: 10px;
+      border-radius: 10px;
+      border: 3px solid $base-color;
+      background-color: $light-base;
+      padding: 20px;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+
+      .folder-name {
+        font-weight: bold;
+        color: $base-color;
+        margin: 4px;
+      }
+
+      .folder-count {
+        color: $base-color;
+        margin: 4px;
+        font-size: 0.85em;
+      }
+    }
   }
 
   .tasks-container {
     width: 100%;
     height: 100%;
     overflow-y: scroll;
-    display: grid;
-    grid-template-columns: repeat(8, 1fr);
-
-    @media only screen and (max-width: 2560px) {
-      grid-template-columns: repeat(7, 1fr);
-    }
-
-    @media only screen and (max-width: 1920px) {
-      grid-template-columns: repeat(6, 1fr);
-    }
-
-    @media only screen and (max-width: 1600px) {
-      grid-template-columns: repeat(5, 1fr);
-    }
-
-    @media only screen and (max-width: 1300px) {
-      grid-template-columns: repeat(4, 1fr);
-    }
-
-    @media only screen and (max-width: 1000px) {
-      grid-template-columns: repeat(3, 1fr);
-    }
+    align-content: start;
+    align-items: start;
+    @include responsive-grid;
 
     .task {
       margin: 10px;
@@ -81,7 +273,16 @@
         color: $base-color;
       }
 
+      .task-remaining {
+        font-size: 0.85em;
+        font-style: italic;
+      }
 
+      .task-remaining-overdue {
+        color: red;
+        font-weight: bold;
+        font-style: normal;
+      }
 
     }
   }

@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { usersDB } from "./data";
 
 export async function GET() {
     const safeUsers = usersDB.map(({ password, ...safeUser }) => safeUser);
@@ -41,7 +42,10 @@ export async function POST(request) {
                 lastName: "",
                 email: email,
                 password: password,
-                groups: []
+                groups: [],
+                notifyEmail: true,
+                notifyFrequency: "immediate",
+                notifyTypes: ["due_soon", "overdue", "assigned"],
             };
 
             usersDB.push(user);
@@ -85,31 +89,3 @@ export async function POST(request) {
     );
 
 }
-
-
-let usersDB = [
-    {
-        id: 1,
-        firstName: "Radosław",
-        lastName: "Krawiec",
-        email: "s29743@pjwstk.edu.pl",
-        password: "admin123",
-        groups: ["admin", "pjatk", "Rumia"]
-    },
-    {
-        id: 2,
-        firstName: "Jan",
-        lastName: "Kowalski",
-        email: "JK@gmail.com",
-        password: "jankowalski123",
-        groups: ["pjatk"]
-    },
-    {
-        id: 3,
-        firstName: "Janina",
-        lastName: "Kowalska",
-        email: "JK2@gmail.pl",
-        password: "JK123",
-        groups: ["Rumia"]
-    }
-]
